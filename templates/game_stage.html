@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raspberry Pi對 調酒師</title>
+    <link rel="stylesheet" href="/static/css/lego_style.css">
+</head>
+<body>
+
+    <audio id="audio-bgm" src="/static/sounds/bgm.mp3" loop></audio>
+    <audio id="audio-scan" src="/static/sounds/scan.mp3"></audio>
+    <audio id="audio-cheer" src="/static/sounds/cheer.mp3"></audio>
+
+    <div id="music-starter" style="position:fixed; bottom:20px; right:20px; z-index:999;">
+        <button class="lego-btn yellow" style="padding: 10px 20px; font-size: 1rem; box-shadow: 0 0 10px rgba(0,0,0,0.5);" onclick="enableAudio()">🔊 開啟聲音</button>
+    </div>
+
+    <div id="identity-badge" style="position:fixed; top:10px; right:10px; padding:5px 10px; background:black; color:white; font-size:0.8rem; z-index:900; display:none;">
+        我是: <span id="my-team-display">未登入</span>
+    </div>
+
+    <div class="container">
+        
+        <div class="header-block">
+            <h1>Raspberry Pi對 調酒師</h1>
+            <div id="status-text" class="breathing-text">等待玩家加入...</div>
+        </div>
+
+        <div id="player-container" class="player-list"></div>
+
+        <div id="name-input-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h2 id="modal-title">偵測到隊伍！</h2>
+                <p id="modal-desc">請輸入您的暱稱以登入</p>
+                <input type="text" id="player-name-input" placeholder="Name..." autocomplete="off">
+                <br>
+                <div style="display:flex; justify-content:center; gap:10px;">
+                    <button class="lego-btn green" onclick="submitName()">✅ 確認登入</button>
+                    <button class="lego-btn red" onclick="closeLoginModal()">❌ 這不是我</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="lobby-section" class="game-section">
+            <h2>大廳等待區</h2>
+            <p>請將貼有樂高的杯子放入感應區...</p>
+            <div style="opacity:0.5; margin-top:20px; border: 1px dashed #ccc; padding: 10px;">
+                <p style="font-size:0.8rem; margin:0;">(測試用模擬登入)</p>
+                <button onclick="testLogin('red')">紅</button>
+                <button onclick="testLogin('blue')">藍</button>
+                <button onclick="testLogin('yellow')">黃</button>
+                <button onclick="testLogin('green')">綠</button>
+            </div>
+            <br>
+            <div id="start-btn-container" style="display:none;">
+                <button id="btn-start" class="lego-btn red" onclick="startGame()">🎮 開始遊戲</button>
+                <p style="font-size:0.8rem; color:#666;">(任何人都能按)</p>
+            </div>
+        </div>
+
+        <div id="dice-section" class="game-section">
+            <h2>Game 1: 七加八減酒</h2>
+            <p style="font-size: 0.9rem;">規則: 7(-10), 8(+10), 9(-25), 其他(+5)</p>
+            <h3 id="dice-player" style="color: var(--lego-blue);">Player</h3>
+            <div class="dice-display">
+                <div id="dice-1" class="card">?</div>
+                <div id="dice-2" class="card">?</div>
+            </div>
+            <div id="dice-msg" class="score-display"></div>
+            
+            <div id="dice-controls" style="display:none;">
+                <button class="lego-btn blue" onclick="rollDice()">🎲 擲骰子</button>
+            </div>
+            <div id="dice-wait-msg" style="display:none; color:#666;">等待對方擲骰子...</div>
+            
+            <button id="btn-dice-next" class="lego-btn green" style="display:none;" onclick="nextTurn('dice')">下一位</button>
+        </div>
+
+        <div id="vocab-section" class="game-section">
+            <h2>Game 2: 詞善團體</h2>
+            <p style="font-size: 0.9rem;">規則: 通過(+15), 駁回(-10)</p>
+            <h3 id="vocab-player" style="color: var(--lego-blue);">Player</h3>
+            
+            <div id="vocab-topic-ui" style="display:none;">
+                <div id="vocab-dealer-controls">
+                    <p>我是莊家，題目是(兩個注音)：</p>
+                    <input type="text" id="vocab-topic" maxlength="2" style="font-size:1.5rem; width:100px; text-align:center;">
+                    <br>
+                    <button class="lego-btn blue" onclick="vocabSetTopic()">確認出題</button>
+                </div>
+                <div id="vocab-dealer-wait">等待莊家出題中...</div>
+            </div>
+
+            <div id="vocab-thinking-ui" style="display:none;">
+                <p>題目：</p>
+                <p id="vocab-topic-display" style="font-size:3em; font-weight:bold; color:var(--lego-red); margin:10px 0;"></p>
+                <h2 id="vocab-timer" style="color:var(--lego-red);"></h2>
+                <div id="vocab-inputs" style="text-align:left; display:inline-block;"></div>
+                <br><br>
+                <button id="btn-vocab-finish" class="lego-btn red" style="display:none;" onclick="vocabFinishThinking()">時間到 / 結束作答</button>
+            </div>
+
+            <div id="vocab-judging-ui" style="display:none;">
+                <p>莊家判決時間：</p>
+                <div id="vocab-judge-list" style="text-align:left; display:inline-block;"></div>
+                <br>
+                <button id="btn-vocab-judge" class="lego-btn green" style="display:none;" onclick="vocabSubmitJudge()">確認判決</button>
+                <div id="vocab-judge-wait" style="display:none;">等待莊家評分中...</div>
+            </div>
+        </div>
+
+        <div id="poker-section" class="game-section">
+            <h2>Game 3: 射龍門</h2>
+            <p style="font-size: 0.9rem;">規則: 進球(+10), 撞柱(-25), 界外(-10)</p>
+            <h3 id="poker-player" style="color: var(--lego-blue);">Player</h3>
+            <div class="card-display">
+                <div id="card-1" class="card poker">?</div>
+                <div id="card-3" class="card poker" style="border-color:red; transform: scale(1.1);">?</div>
+                <div id="card-2" class="card poker">?</div>
+            </div>
+            <div id="poker-msg" class="score-display" style="min-height: 1.5em;"></div>
+            
+            <div id="poker-controls" style="display:none;">
+                <button class="lego-btn blue" onclick="pokerBet(true)">下注 (Draw)</button>
+                <button class="lego-btn red" onclick="pokerBet(false)">不抽 (Pass)</button>
+            </div>
+            <div id="poker-wait-msg" style="display:none; color:#666;">等待對方下注...</div>
+
+            <button id="btn-draw" class="lego-btn blue" style="display:none;" onclick="drawCard()">✋ 抽牌</button>
+            <button id="btn-poker-next" class="lego-btn green" style="display:none;" onclick="nextTurn('poker')">下一位</button>
+        </div>
+
+        <div id="finished-section" class="game-section">
+            <h2>🎉 遊戲結算 🎉</h2>
+            <p>最高50ml酒精 / 225ml總量</p>
+            <table class="result-table">
+                <thead>
+                    <tr><th>玩家</th><th>分數</th><th>酒精</th><th>汽水</th><th>累計酒精</th></tr>
+                </thead>
+                <tbody id="result-body"></tbody>
+            </table>
+            <br>
+            <button class="lego-btn red" onclick="startDispensing()">開始調酒程序</button>
+        </div>
+
+        <div id="dispensing-section" class="game-section">
+            <h2>🍹 調酒中...</h2>
+            <div id="dispense-msg" class="score-display" style="color:var(--lego-red); font-size: 1.5rem; margin: 20px;">...</div>
+            <div id="timer-box" style="margin: 20px; font-size: 2rem; font-weight: bold; color: var(--lego-blue);">
+                調製時間剩餘：<span id="dispense-timer">0</span> 秒
+            </div>
+            <div style="margin: 20px 0;">
+                <button id="btn-pause" class="lego-btn yellow" onclick="togglePause()">⏸ 暫停 (PAUSE)</button>
+            </div>
+            <div id="end-options" style="display:none; margin-top:30px; border-top: 4px solid #111; padding-top: 20px;">
+                <h3>本局結束，下一步？</h3>
+                <button class="lego-btn blue" onclick="resetGame('soft')">🔄 相同玩家再來一局</button>
+                <br><br>
+                <button class="lego-btn green" onclick="resetGame('hard')">🆕 換組遊玩 (清除資料)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/js/game.js"></script>
+</body>
+</html>
