@@ -2,6 +2,10 @@
 
 這是一個結合 IoT 物聯網、Web 前端互動的智慧調酒系統。玩家透過 RFID 綁定身分，在手機上進行多人互動遊戲（骰子、造詞、射龍門），系統會根據遊戲分數自動計算「酒精濃度」，分數越低酒精越多（High Risk, High Reward），最後驅動蠕動幫浦調製出專屬飲品。
 
+# youtube 影片連結
+
+https://www.youtube.com/watch?v=jJUcVitObDs
+
 ## 特色 (Features)
 
   * **多人互動遊戲**：支援 4 人同時連線，包含《七加八減酒》、《詞善團體》、《射龍門》三款派對遊戲。
@@ -14,15 +18,22 @@
 
 ## 硬體架構 (Hardware)
 
-[Image of Raspberry Pi 4 pinout diagram]
+  * 實際接線圖
+<img width="1104" height="779" alt="image" src="https://github.com/user-attachments/assets/a8ba1f80-bc75-444c-bb04-da3b7189383c" />
 
   * **控制器**：Raspberry Pi 4 Model B
   * **感測器**：RFID-RC522 (SPI 介面)
   * **驅動模組**：4路繼電器模組 (4-Channel Relay, 低電位觸發)
-  * **執行元件**：12V 蠕動幫浦 x2 (Pump 1: 氣泡水, Pump 2: 酒精)
+  * **執行元件**：12V 水泵 x2 (Pump 1: 氣泡水, Pump 2: 酒精)
   * **電源**：
       * Raspberry Pi: 5V (USB-C)
-      * Pumps: 12V (獨立電源供應器)
+      * Pumps: 12V (110V轉12V 交換式電源供應＋電線)
+  * **麵包版**
+  * **杜邦線**
+  * **食用級水管**
+
+  * 成品圖 (以樂高建立整體結構)
+<img width="690" height="860" alt="image" src="https://github.com/user-attachments/assets/0ca109c0-7f9f-4c9c-ba78-a1f772b6b348" />
 
 ## 軟體技術 (Tech Stack)
 
@@ -32,11 +43,9 @@
   * **Hardware Control**: RPi.GPIO, spidev, mfrc522
   * **Networking**: Ngrok 
 
-##
+## 前端遊戲模擬登入畫面
 
-## 線路圖
-<img width="1091" height="783" alt="image" src="https://github.com/user-attachments/assets/27e2ffe7-4f49-4008-8ca8-f0a42f160bb5" />
-
+<img width="1419" height="783" alt="image" src="https://github.com/user-attachments/assets/b94ebc30-3fcd-4b6d-a82d-de2f243b15e2" />
 
 
 ## 安裝與執行 (Installation & Usage)
@@ -61,7 +70,7 @@ cd RaspberryPi-Party-Bartender
 
 ### 3\. 啟動系統
 
-本系統需要開啟兩個終端機視窗同時執行：
+本系統需要開啟三個終端機視窗同時執行：
 
 **視窗 A: 啟動網頁伺服器與遊戲邏輯**
 
@@ -70,6 +79,11 @@ python3 app.py
 ```
 
 **視窗 B: 啟動 RFID 監聽程式**
+
+```bash
+python3 rfid_daemon.py
+```
+**視窗 C: 啟動 RFID 監聽程式**
 
 ```bash
 python3 rfid_daemon.py
@@ -101,7 +115,7 @@ RaspberryPi-Smart-Bartender/
     └── game_stage.html     # 主要遊戲頁面
 ```
 
-## 🎮 遊戲規則 (Game Rules)
+##  遊戲規則 (Game Rules)
 
 1.  **七加八減酒 (Dice)**：
       * 總和 7：扣 10 分 (更多酒精)
@@ -129,6 +143,5 @@ RaspberryPi-Smart-Bartender/
   * **緊急停止**：如遇液體溢出或硬體異常，請點擊網頁上的 **「🛑 緊急停止」** 按鈕或直接拔除馬達電源。
   * **音效播放**：受瀏覽器政策限制，進入網頁後必須先與頁面互動 (點擊開啟聲音) 才能自動播放背景音樂。
 
-## 📜 License
-
-此專案為學術專題用途，採用 MIT License 開源。
+## 參考資料
+https://github.com/chung-coder/Iot-bartender
