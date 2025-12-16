@@ -1,14 +1,14 @@
 # Raspberry Pi對 調酒師
 
-這是一個結合 IoT 物聯網、Web 前端互動 與 自動控制 的智慧調酒系統。玩家透過 RFID 綁定身分，在手機上進行多人互動遊戲（骰子、造詞、射龍門），系統會根據遊戲分數自動計算「酒精濃度」，分數越低酒精越多（High Risk, High Reward），最後驅動蠕動幫浦調製出專屬飲品。
+這是一個結合 IoT 物聯網、Web 前端互動的智慧調酒系統。玩家透過 RFID 綁定身分，在手機上進行多人互動遊戲（骰子、造詞、射龍門），系統會根據遊戲分數自動計算「酒精濃度」，分數越低酒精越多（High Risk, High Reward），最後驅動蠕動幫浦調製出專屬飲品。
 
 ## 特色 (Features)
 
   * **多人互動遊戲**：支援 4 人同時連線，包含《七加八減酒》、《詞善團體》、《射龍門》三款派對遊戲。
   * **響應式網頁 (RWD)**：採用 **樂高 (LEGO)** 風格設計，手機/平板/電腦皆可操作。
-  * **RFID 身分識別**：刷卡自動登入，系統自動綁定紅/藍/黃/綠四個隊伍。
+  * **RFID 身分識別**：刷卡感應RFID自動登入，系統自動綁定紅/藍/黃/綠四個隊伍。
   * **專屬操作權限**：前端具有身分驗證機制，只有輪到的玩家手機會顯示操作按鈕，防止誤觸。
-  * **自動調酒系統**：根據遊戲積分動態計算 [氣泡水 : 酒精] 比例，透過 Relay 控制蠕動幫浦精準出水。
+  * **自動調酒系統**：根據遊戲積分動態計算 [氣泡水 : 酒精] 比例，透過繼電器控制蠕動幫浦精準出水。
   * **數據持久化**：使用 SQLite 資料庫紀錄每一局的詳細分數與酒精攝取量。
   * **安全機制**：具備軟體緊急停止 (Emergency Stop) 與暫停 (Pause) 功能。
 
@@ -30,7 +30,14 @@
   * **Frontend**: HTML5, CSS3 (LEGO Style), Vanilla JavaScript (AJAX Polling)
   * **Database**: SQLite
   * **Hardware Control**: RPi.GPIO, spidev, mfrc522
-  * **Networking**: Ngrok (用於外部網路穿透演示)
+  * **Networking**: Ngrok 
+
+##
+
+## 線路圖
+<img width="1091" height="783" alt="image" src="https://github.com/user-attachments/assets/27e2ffe7-4f49-4008-8ca8-f0a42f160bb5" />
+
+
 
 ## 安裝與執行 (Installation & Usage)
 
