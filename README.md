@@ -1,6 +1,6 @@
 # Raspberry Pi對 調酒師
 
-這是一個結合 IoT 物聯網、Web 前端互動的智慧調酒系統。玩家透過 RFID 綁定身分，在手機上進行多人互動遊戲（骰子、造詞、射龍門），系統會根據遊戲分數自動計算「酒精濃度」，分數越低酒精越多（High Risk, High Reward），最後驅動蠕動幫浦調製出專屬飲品。
+這是一個結合 IoT 物聯網、Web 前端互動的智慧調酒系統。玩家透過 RFID 綁定身分，在手機上進行多人互動遊戲（骰子、造詞、射龍門），系統會根據遊戲分數自動計算「酒精濃度」，分數越低酒精越多，最後驅動蠕動幫浦調製出專屬飲品。
 
 # youtube 影片連結
 
@@ -14,25 +14,25 @@ https://www.youtube.com/watch?v=jJUcVitObDs
   * **專屬操作權限**：前端具有身分驗證機制，只有輪到的玩家手機會顯示操作按鈕，防止誤觸。
   * **自動調酒系統**：根據遊戲積分動態計算 [氣泡水 : 酒精] 比例，透過繼電器控制蠕動幫浦精準出水。
   * **數據持久化**：使用 SQLite 資料庫紀錄每一局的詳細分數與酒精攝取量。
-  * **安全機制**：具備軟體緊急停止 (Emergency Stop) 與暫停 (Pause) 功能。
+  * **安全機制**：具備軟體緊急暫停功能。
 
 ## 硬體架構 (Hardware)
 
-  * 實際接線圖
+  * **實際接線圖**
 <img width="1104" height="779" alt="image" src="https://github.com/user-attachments/assets/a8ba1f80-bc75-444c-bb04-da3b7189383c" />
 
-  * **控制器**：Raspberry Pi 4 Model B
-  * **感測器**：RFID-RC522 (SPI 介面)
-  * **驅動模組**：4路繼電器模組 (4-Channel Relay, 低電位觸發)
-  * **執行元件**：12V 水泵 x2 (Pump 1: 氣泡水, Pump 2: 酒精)
-  * **電源**：
-      * Raspberry Pi: 5V (USB-C)
-      * Pumps: 12V (110V轉12V 交換式電源供應＋電線)
-  * **麵包版**
-  * **杜邦線**
-  * **食用級水管**
-
-  * 成品圖 (以樂高建立整體結構)
+  * **1-控制器**：Raspberry Pi 4 Model B
+  * **2-感測器**：RFID-RC522 (SPI 介面)
+  * **3-驅動模組**：4路繼電器模組 (4-Channel Relay, 低電位觸發)
+  * **4-執行元件**：12V 水泵 x2 (Pump 1: 氣泡水, Pump 2: 酒精)
+  * **5-電源**：
+      * 5-1 Raspberry Pi: 5V (USB-C)
+      * 5-2 Pumps: 12V (110V轉12V 交換式電源供應＋電線)
+  * **6-麵包版**
+  * **7-杜邦線**
+  * **8-食用級水管**
+    
+  * **成品圖(以樂高建立整體結構)**
 <img width="690" height="860" alt="image" src="https://github.com/user-attachments/assets/0ca109c0-7f9f-4c9c-ba78-a1f772b6b348" />
 
 ## 軟體技術 (Tech Stack)
@@ -83,15 +83,15 @@ python3 app.py
 ```bash
 python3 rfid_daemon.py
 ```
-**視窗 C: 啟動 RFID 監聽程式**
+**視窗 C: 啟動 Ngrok 隧道 (對外通道)**
 
 ```bash
-python3 rfid_daemon.py
+ngrok http 5000
 ```
 
 ### 4\. 開始使用
 
-1.  打開瀏覽器輸入 `http://<RaspberryPi_IP>:5000` (或使用 Ngrok 網址)。
+1.  打開瀏覽器輸入 ` https://sanidinic-ungrappling-nathaniel.ngrok-free.dev` 。
 2.  點擊右下角 **「開啟聲音」**。
 3.  將 RFID 卡片/杯子放置於讀卡機上登入。
 4.  依照網頁指示進行遊戲。
@@ -140,8 +140,9 @@ RaspberryPi-Smart-Bartender/
 ## 注意事項 (Notes)
 
   * **電源安全**：請確保馬達使用的是獨立 12V 電源，勿直接從 Raspberry Pi 取電。
-  * **緊急停止**：如遇液體溢出或硬體異常，請點擊網頁上的 **「🛑 緊急停止」** 按鈕或直接拔除馬達電源。
+  * **緊急停止**：如遇液體溢出或硬體異常，請點擊網頁上的 **「緊急停止」** 按鈕或直接拔除馬達電源。
   * **音效播放**：受瀏覽器政策限制，進入網頁後必須先與頁面互動 (點擊開啟聲音) 才能自動播放背景音樂。
 
 ## 參考資料
-https://github.com/chung-coder/Iot-bartender
+
+IoT-bartender：https://github.com/chung-coder/Iot-bartender
