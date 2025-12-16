@@ -37,11 +37,11 @@ https://www.youtube.com/watch?v=jJUcVitObDs
 
 ## 軟體技術 (Tech Stack)
 
-  * **Backend**: Python 3, Flask (Web Server)
-  * **Frontend**: HTML5, CSS3 (LEGO Style), Vanilla JavaScript (AJAX Polling)
-  * **Database**: SQLite
-  * **Hardware Control**: RPi.GPIO, spidev, mfrc522
-  * **Networking**: Ngrok 
+  * **後端**: Python 3, Flask (Web Server)
+  * **前端**: HTML5, CSS3 (LEGO Style), Vanilla JavaScript (AJAX Polling)
+  * **資料庫**: SQLite
+  * **硬體控制**: RPi.GPIO, spidev, mfrc522
+  * **聯網**: Ngrok 
 
 ## 前端遊戲模擬登入畫面
 
